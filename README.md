@@ -4,12 +4,7 @@ Reproducible experiments for robust **polynomial and B-spline regression** under
 
 This repository accompanies the Towards Data Science article:
 
-**[Don’t Let Messy Data Bend Your Curves](https://towardsdatascience.com/dont-let-messy-data-bend-your-curves/)**
-
-It extends the first article in the series:
-
-- [How to Make Linear Regression Survive Outliers](https://towardsdatascience.com/how-to-make-linear-regression-survive-outliers/)
-- [robust-linear-regression-outliers](https://github.com/chughtaiah/robust-linear-regression-outliers)
+**[Don’t Let Messy Data Bend Your Curves]**
 
 ## What is compared?
 
