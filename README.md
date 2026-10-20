@@ -1,131 +1,125 @@
-# Robust Linear Regression Under Outliers
+# Robust Curve Regression with Outliers
 
-[[Towards Data Science](https://shields.io)](https://towardsdatascience.com)
-[[License: MIT](https://shields.io)](https://opensource.org)
+Reproducible experiments for robust **polynomial and B-spline regression** under multiple outlier mechanisms.
 
-Reproducible code and experiments accompanying the **Towards Data Science** article: 
-📖 [**“How to Make Linear Regression Survive Outliers: Comparing Classical and Modern Robust Estimators Through Theory, Code, and Experiments”**](https://towardsdatascience.com/how-to-make-linear-regression-survive-outliers/).
+This repository accompanies the Towards Data Science article:
 
-The notebook compares:
+**[Don’t Let Messy Data Bend Your Curves](https://towardsdatascience.com/dont-let-messy-data-bend-your-curves/)**
 
-- Ordinary Least Squares (OLS)
+It extends the first article in the series:
+
+- [How to Make Linear Regression Survive Outliers](https://towardsdatascience.com/how-to-make-linear-regression-survive-outliers/)
+- [robust-linear-regression-outliers](https://github.com/chughtaiah/robust-linear-regression-outliers)
+
+## What is compared?
+
+The notebook uses the same six estimators as the linear-regression study:
+
+- Ordinary least squares (OLS)
 - Huber regression
 - RANSAC
 - GNC-GM
 - GNC-TLS
-- Adaptive Selective Outlier Rejecting (ASOR)
+- ASOR
 
-It evaluates zero-mean Gaussian, biased Gaussian, biased uniform, and
-coherent competing-line contamination, together with sample-size,
-noise-scale, accuracy, and runtime experiments.
+and applies them to three curve representations:
 
----
+- quadratic polynomial;
+- cubic polynomial;
+- quadratic B-spline.
 
-## Repository contents
+The central idea is simple:
 
-- `robust_linear_regression_outliers.ipynb` — complete reproducible notebook
-- `figures/` — the nine retained article figures
-- `requirements.txt` — Python dependencies
-- `.gitignore` — standard Python/Jupyter exclusions
+> **Change the basis; keep the robust-estimation machinery.**
 
-Running the notebook also exports numerical CSV files, article tables,
-and a figure manifest into `figures/`.
+## Experiments
 
----
+The notebook includes:
 
-## Quick start
+- zero-mean Gaussian replacement outliers;
+- biased Gaussian replacement outliers;
+- biased uniform replacement outliers;
+- a coherent competing curve;
+- contamination ratios from 0% to 90%;
+- sample-size scaling;
+- nominal-noise scaling;
+- RANSAC minimal-sample analysis;
+- a common-ground-truth model-richness experiment;
+- an illustrative local-support experiment;
+- wind-turbine power-curve and GNSS Doppler case studies.
 
-Python 3.10 or newer is recommended.
+Each exact condition in the full benchmark is repeated over **30 Monte Carlo realizations**.
+
+## Repository structure
+
+```text
+robust-curve-regression-outliers/
+├── figures/
+├── License
+├── README.md
+├── requirements.txt
+└── robust_curve_regression_outliers.ipynb
+```
+
+The `figures/` folder contains the main visual assets used in the article, including the polynomial-basis and B-spline animations and the wind-turbine and GNSS illustrations.
+
+## Installation
+
+Clone the repository and install the dependencies:
 
 ```bash
-python -m venv .venv
+git clone https://github.com/chughtaiah/robust-curve-regression-outliers.git
+cd robust-curve-regression-outliers
+pip install -r requirements.txt
 ```
 
-On Windows PowerShell:
-
-```powershell
-.\.venv\Scripts\Activate.ps1
-```
-
-On macOS or Linux:
+Then open the notebook:
 
 ```bash
-source .venv/bin/activate
+jupyter notebook robust_curve_regression_outliers.ipynb
 ```
 
-Install the dependencies and start Jupyter:
+## Quick and full runs
 
-```bash
-python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
-jupyter lab
+The notebook defaults to:
+
+```python
+RUN_PROFILE = "quick"
 ```
 
-Open `robust_linear_regression_outliers.ipynb`, then use **Restart Kernel
-and Run All Cells**.
+for a fast check of the complete pipeline.
 
----
+To reproduce the full article benchmark, change it to:
+
+```python
+RUN_PROFILE = "full"
+```
+
+The full profile runs 30 Monte Carlo realizations for each exact condition and generates the detailed numerical results and figures.
+
+## Main benchmark settings
+
+- Baseline sample size: `N = 100`
+- Predictor range: `[-100, 100]`
+- Baseline nominal variance: `σ_in² = 1000`
+- Contamination ratios: `0%, 10%, 30%, 50%, 70%, 90%`
+- Sample-size sweep: `N = 50, 100, 200, 500, 1000, 2000, 5000`
+- Noise-variance sweep: `10, 100, 1000, 10000`
+
+For the controlled model-richness experiment, the **same quadratic ground truth and the same contaminated observations** are fitted using quadratic, cubic, and B-spline bases. This isolates the effect of changing the representation while keeping the data fixed.
 
 ## Reproducibility notes
 
-- Monte Carlo datasets use deterministic seeds.
-- Every estimator receives the same dataset within each realization.
-- Prediction-error results are deterministic under the supplied settings.
-- Runtime values depend on hardware, power mode, operating-system
-  scheduling, Python packages, and the BLAS implementation.
-- The reported benchmark system was an HP ProBook 455 G10 with an AMD
-  Ryzen 7 7730U processor, 32 GB RAM, and Microsoft Windows 11 Pro.
-- The introductory alternative line uses slope 9; the structured
-  quantitative benchmark uses slope 15.
-- The GNC chi-square coverage probability of 0.99 is a benchmark
-  calibration choice rather than a prescribed value from the original
-  GNC formulation.
-
-## Generated outputs
-
-The notebook generates these retained figures:
-
-1. clean observations;
-2. introductory contaminated observations;
-3. zero-mean Gaussian prediction error;
-4. biased Gaussian prediction error;
-5. biased uniform prediction error;
-6. coherent competing-line prediction error;
-7. biased Gaussian runtime;
-8. sample-size prediction-error scaling;
-9. sample-size runtime scaling.
-
----
+- Every estimator sees the same dataset within a Monte Carlo realization.
+- Random seeds are fixed and documented in the notebook.
+- The robust-estimator implementations retain the settings used in the previous linear-regression study.
+- Only model-specific changes, such as the design matrix and RANSAC minimal sample size, are introduced where necessary.
+- Reported empirical conclusions are limited to the benchmark conditions tested here.
 
 ## Disclosure
 
-### Methodology & Attribution
-**Aamir Hussain Chughtai, PhD** was the primary designer of **ASOR**, originally introduced in the study *“Bayesian Heuristics for Robust Spatial Perception”* (**IEEE Transactions on Instrumentation and Measurement**, 2024). 
-
-To ensure a transparent comparison, all estimators in this benchmark suite are evaluated on the identical **Monte Carlo realizations** using the fixed and documented algorithmic schedules detailed in the article.
-
-#### **BibTeX**
-```bibtex
-@article{chughtai2024asor,
-  author={Chughtai, Aamir Hussain and Tahir, Muhammad and Uppal, Mubeen},
-  journal={IEEE Transactions on Instrumentation and Measurement}, 
-  title={Bayesian Heuristics for Robust Spatial Perception}, 
-  year={2024},
-  volume={73},
-  pages={1--12}
-}
-```
-
-#### **APA 7th Edition**
-```text
-Chughtai, A. H., Tahir, M., & Uppal, M. (2024). Bayesian Heuristics for Robust Spatial Perception. IEEE Transactions on Instrumentation and Measurement, 73, 1-12.
-```
-
----
+Aamir Hussain Chughtai was the primary designer of ASOR in the cited work. All estimators are evaluated on the same Monte Carlo realizations using fixed and documented settings.
 
 ## License
 
-The source code, notebook, and generated figures in this repository are
-released under the MIT License.
-
-Copyright © 2026 Aamir Hussain Chughtai. See the `LICENSE` file for details.
+This repository is released under the MIT License. See `License`.
