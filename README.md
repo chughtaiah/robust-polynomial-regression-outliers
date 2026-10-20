@@ -2,9 +2,7 @@
 
 Reproducible experiments for robust **polynomial and B-spline regression** under multiple outlier mechanisms.
 
-This repository accompanies the Towards Data Science article:
-
-**[Don’t Let Messy Data Bend Your Curves]**
+This repository accompanies the Towards Data Science article:**Don’t Let Messy Data Bend Your Curves**
 
 ## What is compared?
 
